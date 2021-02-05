@@ -28,6 +28,11 @@ def make():
   if(not build_number):
     build_number = "0"
 
+  #2021-02-05(MGP) Adding file replace for exports.LICENSE_CONNECTIONS
+  license_connections = base.get_env('LICENSE_CONNECTIONS')
+  if (not license_connections):
+    license_connections = "99999"
+
   cur_date = datetime.date.today().strftime("%m/%d/%Y")
 
   server_build_dir = server_dir + "/build/server"
@@ -35,6 +40,10 @@ def make():
   base.replaceInFileRE(server_build_dir + "/Common/sources/commondefines.js", "const buildNumber = [0-9]*", "const buildNumber = " + build_number)
   base.replaceInFileRE(server_build_dir + "/Common/sources/license.js", "const buildDate = '[0-9-/]*'", "const buildDate = '" + cur_date + "'")
   base.replaceInFileRE(server_build_dir + "/Common/sources/commondefines.js", "const buildVersion = '[0-9.]*'", "const buildVersion = '" + product_version + "'")
+
+  #2021-02-05(MGP) Adding file replace for exports.LICENSE_CONNECTIONS
+  base.replaceInFileRE(server_build_dir + "/Common/sources/constants.js", "exports.LICENSE_CONNECTIONS = 20;",
+                       "exports.LICENSE_CONNECTIONS = " + license_connections + ";")
 
   custom_public_key = branding_dir + '/debug.js'
 
