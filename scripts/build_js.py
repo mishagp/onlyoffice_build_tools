@@ -17,42 +17,42 @@ def make():
   base.create_dir(out_dir)
 
   # builder
-  build_interface(base_dir + "/../web-apps/build")
-  build_sdk_builder(base_dir + "/../sdkjs/build")
+  build_interface(base_dir + "/build/web-apps/build")
+  build_sdk_builder(base_dir + "/build/sdkjs/build")
   base.create_dir(out_dir + "/builder")
-  base.copy_dir(base_dir + "/../web-apps/deploy/web-apps", out_dir + "/builder/web-apps")
-  base.copy_dir(base_dir + "/../sdkjs/deploy/sdkjs", out_dir + "/builder/sdkjs")
+  base.copy_dir(base_dir + "/build/web-apps/deploy/web-apps", out_dir + "/builder/web-apps")
+  base.copy_dir(base_dir + "/build/sdkjs/deploy/sdkjs", out_dir + "/builder/sdkjs")
 
   # desktop
   if config.check_option("module", "desktop"):
-    build_sdk_desktop(base_dir + "/../sdkjs/build")
+    build_sdk_desktop(base_dir + "/build/sdkjs/build")
     base.create_dir(out_dir + "/desktop")
-    base.copy_dir(base_dir + "/../sdkjs/deploy/sdkjs", out_dir + "/desktop/sdkjs")
-    base.copy_dir(base_dir + "/../web-apps/deploy/web-apps", out_dir + "/desktop/web-apps")
+    base.copy_dir(base_dir + "/build/sdkjs/deploy/sdkjs", out_dir + "/desktop/sdkjs")
+    base.copy_dir(base_dir + "/build/web-apps/deploy/web-apps", out_dir + "/desktop/web-apps")
     if not base.is_file(out_dir + "/desktop/sdkjs/common/AllFonts.js"):
-      base.copy_file(base_dir + "/../sdkjs/common/HtmlFileInternal/AllFonts.js", out_dir + "/desktop/sdkjs/common/AllFonts.js")
+      base.copy_file(base_dir + "/build/sdkjs/common/HtmlFileInternal/AllFonts.js", out_dir + "/desktop/sdkjs/common/AllFonts.js")
     base.delete_dir(out_dir + "/desktop/web-apps/apps/documenteditor/embed")
     base.delete_dir(out_dir + "/desktop/web-apps/apps/documenteditor/mobile")
     base.delete_dir(out_dir + "/desktop/web-apps/apps/presentationeditor/embed")
     base.delete_dir(out_dir + "/desktop/web-apps/apps/presentationeditor/mobile")
     base.delete_dir(out_dir + "/desktop/web-apps/apps/spreadsheeteditor/embed")
     base.delete_dir(out_dir + "/desktop/web-apps/apps/spreadsheeteditor/mobile")
-    base.copy_file(base_dir + "/../web-apps/apps/api/documents/index.html.desktop", out_dir + "/desktop/web-apps/apps/api/documents/index.html")
+    base.copy_file(base_dir + "/build/web-apps/apps/api/documents/index.html.desktop", out_dir + "/desktop/web-apps/apps/api/documents/index.html")
     
-    build_interface(base_dir + "/../desktop-apps/common/loginpage/build")
-    base.copy_file(base_dir + "/../desktop-apps/common/loginpage/deploy/index.html", out_dir + "/desktop/index.html")
+    build_interface(base_dir + "/build/desktop-apps/common/loginpage/build")
+    base.copy_file(base_dir + "/build/desktop-apps/common/loginpage/deploy/index.html", out_dir + "/desktop/index.html")
   
   # mobile
   if config.check_option("module", "mobile"):
-    build_sdk_native(base_dir + "/../sdkjs/build")
+    build_sdk_native(base_dir + "/build/sdkjs/build")
     base.create_dir(out_dir + "/mobile")
     base.create_dir(out_dir + "/mobile/sdkjs")
-    vendor_dir_src = base_dir + "/../web-apps/vendor/"
-    sdk_dir_src = base_dir + "/../sdkjs/deploy/sdkjs/"
+    vendor_dir_src = base_dir + "/build/web-apps/vendor/"
+    sdk_dir_src = base_dir + "/build/sdkjs/deploy/sdkjs/"
     # banners
     base.join_scripts([vendor_dir_src + "xregexp/xregexp-all-min.js", 
                        vendor_dir_src + "underscore/underscore-min.js",
-                       base_dir + "/../sdkjs/common/externs/jszip-utils.js",
+                       base_dir + "/build/sdkjs/common/externs/jszip-utils.js",
                        sdk_dir_src + "common/Native/native.js",
                        sdk_dir_src + "../../common/Native/Wrappers/common.js",
                        sdk_dir_src + "common/Native/jquery_native.js"], 

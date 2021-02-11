@@ -61,7 +61,7 @@ def check_build_version(dir):
       version_number = version_number.replace("\n", "")
       set_env("PRODUCT_VERSION", version_number)
   if ("" == get_env("BUILD_NUMBER")):
-    set_env("BUILD_NUMBER", "0")      
+    set_env("BUILD_NUMBER", "0")
   return
 
 def print_info(info=""):
@@ -149,7 +149,7 @@ def copy_dir(src, dst):
   if is_dir(dst):
     delete_dir(dst)
   try:
-    shutil.copytree(get_path(src), get_path(dst))    
+    shutil.copytree(get_path(src), get_path(dst))
   except OSError as e:
     print('Directory not copied. Error: %s' % e)
   return
@@ -244,7 +244,7 @@ def writeFile(path, data):
   return
 
 # system cmd methods ------------------------------------
-def cmd(prog, args=[], is_no_errors=False):  
+def cmd(prog, args=[], is_no_errors=False):
   ret = 0
   if ("windows" == host_platform()):
     sub_args = args[:]
@@ -259,7 +259,7 @@ def cmd(prog, args=[], is_no_errors=False):
     sys.exit("Error (" + prog + "): " + str(ret))
   return ret
 
-def cmd2(prog, args=[], is_no_errors=False):  
+def cmd2(prog, args=[], is_no_errors=False):
   ret = 0
   command = prog if ("windows" != host_platform()) else get_path(prog)
   for arg in args:
@@ -315,7 +315,7 @@ def run_command(sCommand):
   finally:
     popen.stdout.close()
     popen.stderr.close()
-  
+
   return result
 
 def run_process(args=[]):
@@ -355,7 +355,7 @@ def git_update(repo, is_no_errors=False, is_current_dir=False):
   url = "https://github.com/ONLYOFFICE/" + repo + ".git"
   if config.option("git-protocol") == "ssh":
     url = "git@github.com:ONLYOFFICE/" + repo + ".git"
-  folder = get_script_dir() + "/../../" + repo
+  folder = get_script_dir() + "/../build/" + repo
   if is_current_dir:
     folder = repo
   is_not_exit = False
@@ -384,7 +384,7 @@ def qt_setup(platform):
   qt_dir = config.option("qt-dir") if (-1 == platform.find("_xp")) else config.option("qt-dir-xp")
   qt_dir = (qt_dir + "/" + compiler["compiler"]) if platform_is_32(platform) else (qt_dir + "/" + compiler["compiler_64"])
   set_env("QT_DEPLOY", qt_dir + "/bin")
-  return qt_dir  
+  return qt_dir
 
 def qt_version():
   qt_dir = get_env("QT_DEPLOY")
@@ -445,7 +445,7 @@ def qt_copy_plugin(name, out):
   src = get_env("QT_DEPLOY") + "/../plugins/" + name
   if not is_dir(src):
     return
-    
+
   copy_dir(src, out + "/" + name)
 
   if ("windows" == host_platform()):
@@ -453,7 +453,7 @@ def qt_copy_plugin(name, out):
       fileCheck = file[0:-5] + ".dll"
       if is_file(fileCheck):
         delete_file(file)
-    
+
   return
 
 def qt_dst_postfix():
@@ -536,8 +536,8 @@ def generate_plist(path):
   bundle_creator = "Ascensio System SIA"
   if ("" != get_env("PUBLISHER_NAME")):
     bundle_creator = get_env("PUBLISHER_NAME")
-  
-  bundle_version_natural = readFile(get_script_dir() + "/../../core/Common/version.txt").split(".")
+
+  bundle_version_natural = readFile(get_script_dir() + "/../build/core/Common/version.txt").split(".")
   bundle_version = []
   for n in bundle_version_natural:
     bundle_version.append(n)
@@ -578,7 +578,7 @@ def generate_plist(path):
     fileInfo = codecs.open(fileDst, "w", "utf-8")
     fileInfo.write(content)
     fileInfo.close()
-      
+
   return
 
 def sdkjs_addons_checkout():
@@ -615,7 +615,7 @@ def sdkjs_plugins_checkout():
   if ("" == plugins_list_config):
     return
   plugins_list = plugins_list_config.rsplit(", ")
-  plugins_dir = get_script_dir() + "/../../sdkjs-plugins"
+  plugins_dir = get_script_dir() + "/../build/sdkjs-plugins"
   if is_dir(plugins_dir + "/.git"):
     delete_dir_with_access_error(plugins_dir);
     delete_dir(plugins_dir)
@@ -634,7 +634,7 @@ def sdkjs_plugins_server_checkout():
   if ("" == plugins_list_config):
     return
   plugins_list = plugins_list_config.rsplit(", ")
-  plugins_dir = get_script_dir() + "/../../sdkjs-plugins"
+  plugins_dir = get_script_dir() + "/../build/sdkjs-plugins"
   if is_dir(plugins_dir + "/.git"):
     delete_dir_with_access_error(plugins_dir);
     delete_dir(plugins_dir)
@@ -786,7 +786,7 @@ def get_file_last_modified_url(url):
     key = key.upper()
     if key == "LAST-MODIFIED":
       retvalue = value
-  
+
   return retvalue
 
 def mac_correct_rpath_binary(path, libs):
@@ -907,23 +907,23 @@ def copy_sdkjs_plugin(src_dir, dst_dir, name, is_name_as_guid=False, is_desktop_
   return
 
 def copy_sdkjs_plugins(dst_dir, is_name_as_guid=False, is_desktop_local=False):
-  plugins_dir = get_script_dir() + "/../../sdkjs-plugins"
+  plugins_dir = get_script_dir() + "/../build/sdkjs-plugins"
   plugins_list_config = config.option("sdkjs-plugin")
   if ("" == plugins_list_config):
     return
   plugins_list = plugins_list_config.rsplit(", ")
   for name in plugins_list:
-    copy_sdkjs_plugin(plugins_dir, dst_dir, name, is_name_as_guid, is_desktop_local)    
+    copy_sdkjs_plugin(plugins_dir, dst_dir, name, is_name_as_guid, is_desktop_local)
   return
 
 def copy_sdkjs_plugins_server(dst_dir, is_name_as_guid=False, is_desktop_local=False):
-  plugins_dir = get_script_dir() + "/../../sdkjs-plugins"
+  plugins_dir = get_script_dir() + "/../build/sdkjs-plugins"
   plugins_list_config = config.option("sdkjs-plugin-server")
   if ("" == plugins_list_config):
     return
   plugins_list = plugins_list_config.rsplit(", ")
   for name in plugins_list:
-    copy_sdkjs_plugin(plugins_dir, dst_dir, name, is_name_as_guid, is_desktop_local)    
+    copy_sdkjs_plugin(plugins_dir, dst_dir, name, is_name_as_guid, is_desktop_local)
   return
 
 def support_old_versions_plugins(out_dir):
@@ -937,11 +937,11 @@ def support_old_versions_plugins(out_dir):
     content_plugin_base += file.read()
   content_plugin_base += "\n\n"
   with open(get_path(out_dir + "/plugins-ui.js"), "r") as file:
-    content_plugin_base += file.read()  
+    content_plugin_base += file.read()
   with open(get_path(out_dir + "/pluginBase.js"), "w") as file:
     file.write(content_plugin_base)
   delete_file(out_dir + "/plugins.js")
-  delete_file(out_dir + "/plugins-ui.js")  
+  delete_file(out_dir + "/plugins-ui.js")
   return
 
 def get_xcode_major_version():
@@ -965,7 +965,7 @@ def hack_xcode_ios():
   filedata += "\n"
   filedata += content_hack
   filedata += "\n\n"
-  
+
   delete_file(qmake_spec_file)
   with open(get_path(qmake_spec_file), "w") as file:
     file.write(filedata)
